@@ -1,5 +1,8 @@
 # Dockerize Your Final Capstone
 
+## Tailored for Tech Elevator Cohort 21 Students
+This Docker guide and configuration is specifically designed for students of Tech Elevator's Cohort 21.
+
 If you didn't make any changes to the default project structure provided by your Java 21 instructor, and didn't make changes to the `vite.config.js` and `application.properties` you could skip all the way to the Installation section.
 
 ## Assumptions
