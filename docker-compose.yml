@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./java/database
+      dockerfile: DatabaseDockerfile
+    environment:
+      - POSTGRES_DB=final_capstone
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres1
+    ports:
+      - "5433:5432" # Map to 5433 so it doesn't conflict with your current psql server
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - capstone-network
+  java-springboot:
+    build:
+      context: ./java
+      dockerfile: JavaDockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+    networks:
+      - capstone-network
+  vue-web:
+    build:
+      context: ./vue
+      dockerfile: VueDockerfile
+    volumes:
+      - vue-node_modules:/srv/app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    init: true
+    stop_grace_period: 1s
+    networks:
+      - capstone-network
+
+volumes:
+  postgres-data:
+  vue-node_modules:
+
+networks:
+  capstone-network:
+    driver: bridge
