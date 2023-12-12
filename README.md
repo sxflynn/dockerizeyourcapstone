@@ -1,15 +1,33 @@
-# Dockerize Your Final Capstone
+# Dockerize Your Final Tech Elevator Capstone
+This Docker guide and configuration is specifically designed for students of Tech Elevator's Java Cohort.
 
-## Tailored for Tech Elevator Cohort 21 Students
-This Docker guide and configuration is specifically designed for students of Tech Elevator's Cohort 21.
+If you didn't make any changes to the default project structure provided by your Java instructor, and didn't make changes to the `vite.config.js` and `application.properties` you could skip all the way to the Installation section.
 
-If you didn't make any changes to the default project structure provided by your Java 21 instructor, and didn't make changes to the `vite.config.js` and `application.properties` you could skip all the way to the Installation section.
+## Automatic Installer
+1. [Download](https://www.docker.com/get-started/) and install and run Docker Desktop
+2. `cd` into your capstone repo, type `pwd` in the Terminal and copy your capstone repo directory.
+3. `cd` back into the `dockerizeyourcapstone` repo and run:
+  ```
+  sh autoinstall.sh
+  ```
+4. Follow the prompts to the end where it will start Docker for you.
+5. (Optional) Run the installer in test mode to see what it does without copying any files.
+  ```
+  sh autoinstall.sh -test
+  ```
+
+## How to use Docker
+1. `cd` into your capstone project
+1. Run the command `docker compose up`
+1. After it finishes building, go to `http://localhost:5173` in your browser to view your project running.
+1. When finished, run the command `docker compose down`
+1. If you make any edits to your code and `docker compose up` still shows your old page, you may need to run `docker compose up --build` instead.
 
 ## Assumptions
 This `Dockerfile` and `docker-compose.yml` solution was created with a very specific environment in mind: Java final capstone for Tech Elevator Cohort 21 students. It could work with your project as long as the assumptions below are true.
 
 ### Project directory structure
-Before using this solution, verify that your project contains these files in this directory structure:
+Before manually installing this solution, verify that your project contains these files in this directory structure:
 
 ```
 /your-capstone-directory
@@ -76,7 +94,7 @@ Finally, in the `/java/database` directory, verify that presence of these 4 file
 | `user.sql`   | Creates database users (`final_capstone_owner` and `final_capstone_appuser`) and grants them necessary permissions. |
 
 
-## Installation
+## Manual Installation
 1. [Download](https://www.docker.com/get-started/) and install Docker Desktop
 1. Clone this repo
 1. Move the files into your project using the guide below. *See: Moving files*
@@ -104,12 +122,6 @@ Take the following files in this git project and move them as follows below:
 | `java/JavaDockerfile` | Move to `/java` |
 | `java/database/DatabaseDockerfile` | Move to `/java/database` |
 | `vue/VueDockerfile`   | Move to `/vue` |
-
-## How to use
-1. `cd` into your capstone project
-1. Run the command `docker compose up`
-1. After it finishes build, go to `localhost:5173` in your browser to view your project running.
-1. When finished, run the command `docker compose down`
 
 ## How it Works
 *This section was written with the assistance of ChatGPT*
@@ -145,14 +157,41 @@ This setup guarantees that each part of your application operates independently 
 
 ## FAQ
 
-### Does it modify any of my capstone files?
+### Does Docker modify any of my capstone files?
 No, it is completely nondestructive and leaves your capstone files alone. After running `docker compose up` run `git status` in your repo to verify nothing was edited.
 
-### Why not just start my server in IntelliJ and do `npm run dev`?
-This Docker solution does not require IntelliJ, VS Code, npm, Postgres, or anything else to be installed on your computer.
+### Why not just start my server in IntelliJ and do `npm run dev` to demo my project?
+This Docker solution does not require IntelliJ, VS Code, npm, Postgres, or anything else to be installed on your computer. Postgres is not fun to install and setup locally.
 
 ### Should I use this Docker solution to continue working on the project?
 Yes and no. Because it is nondestructive, any edits you make to your code won't be reflected on the web browser until you `docker compose down` and `docker compose up` again. If you are actively working on the project, you are better off running IntelliJ and `npm run dev`. This Docker solution is best for showcasing and viewing your project, especially after Tech Elevator where you lose access to your development machine.
 
 ### Will this Docker setup help me deploy my capstone project to a cloud provider?
-In theory, yes, but there would need to be modifications to make it production ready. You'd need to use environment variable and store secrets like usernames and passwords in the cloud provider. You'd also need to rebuild the web application so that it's ready for production. In other words, this Docker setup is designed to let you view and run your capstone project on any machine, but it's not designed for cloud deployment.
+In theory, yes, but there would need to be modifications to make it production ready. You'd need to use environment variables and store secrets like usernames and passwords in the cloud provider. You'd also need to rebuild the web application so that it's ready for production. In other words, this Docker setup is designed to let you view and run your capstone project on any machine, but it's not strictly designed for cloud deployment.
+
+## Troubleshooting
+### `0.113 rm: can't remove 'dropdb.sql': No such file or directory`
+Somehow your directory structure is not matching what is expected. It's recommended that you use the `autoinstall.sh` which will check your directory structure and assumptions prior to copying the Docker files for you.
+
+### After using Docker, I made updates to my capstone project but the code/website isn't fully updated in the Docker container when it runs.
+You may have to rebuild the container and/or delete volumes. Try them one at a time to see if it fixes anything.
+#### Stop the docker containers
+```
+docker compose down
+```
+#### Rebuild the containers
+ ```
+ docker compose up --build
+ ```
+#### Delete docker volumes
+ ```
+ docker volume ls
+ ```
+ ```
+ docker volume rm [image name]
+ ```
+### `Error response from daemon: Ports are not available: exposing port TCP 0.0.0.0:9000 -> 0.0.0.0:0: listen tcp 0.0.0.0:9000: bind: address already in use`
+You have the IntelliJ server running which is preventing Docker from binding to that same port. Stop the server in IntelliJ in addition to stopping the npm server before starting up `docker compose`.
+
+### I used the auto-installer but my capstone still isn't fully running.
+ Please open an issue! I'd love to take a look and problem-solve. Be sure to include what the logs from `docker` are saying.
