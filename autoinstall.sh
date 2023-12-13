@@ -142,7 +142,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         exit 0;
     else
         echo "Docker is installed. Starting Docker..."
-        cd "$git_repo_path" && docker-compose up
+        cd "$git_repo_path" && docker compose up
     fi
 fi
 
