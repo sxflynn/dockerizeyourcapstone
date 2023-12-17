@@ -132,7 +132,7 @@ copy_files "./docker-compose$iftest.yml" "$git_repo_path/docker-compose.yml" \
 
 
 # After the successful completion of the copy_files function
-echo "\033[0;32mAll files have been successfully copied. Please 'cd' into your project repository and type 'docker-compose up' to start your project.\033[0m"
+echo "\033[0;32mAll files have been successfully copied. Please 'cd' into your project repository and type 'docker compose up' to start your project.\033[0m"
 
 read -p "Would you like this script to 'cd' into your Git repository and start Docker? (y/n) " -n 1 -r
 echo
